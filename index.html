@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tasbih / Mantra Counter</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+      transition: background 1s ease;
+    }
+
+    h1 {
+      font-size: 2.6em;
+      margin-bottom: 10px;
+      text-shadow: 1px 1px 4px #ccc;
+    }
+
+    #counter {
+      font-size: 75px;
+      color: #1b5e20;
+      margin: 20px 0;
+      transition: transform 0.2s ease;
+    }
+
+    #cycleStatus {
+      font-size: 26px;
+      margin: 10px 0;
+      color: #333;
+    }
+
+    #goalStatus {
+      font-size: 22px;
+      margin-top: 10px;
+      color: #555;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 18px;
+      margin: 8px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 2px 4px 10px rgba(0,0,0,0.2);
+      transition: transform 0.1s ease;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    #increment {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    #reset {
+      background-color: #f44336;
+      color: white;
+    }
+
+    select {
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="title">🕋 Tasbih / Mantra Counter</h1>
+  <select id="religionSelect">
+    <option value="islamic">🕋 Islamic Tasbih</option>
+    <option value="hindu">🕉️ Hindu Mantra</option>
+    <option value="buddhist">☸️ Buddhist Mala</option>
+  </select>
+  <div id="counter">0</div>
+  <div id="cycleStatus">🟢 Full Cycles Completed: 0</div>
+  <div id="goalStatus"></div>
+  <button id="increment">Count +1</button>
+  <button id="reset">Reset</button>
+
+  <script>
+    let count = 0;
+    let fullCycles = 0;
+    let spiritualGoals = 0;
+    const cycleTarget = 100; // 100 counts = 1 cycle
+    const goalTarget = 10;   // 10 cycles = 1 spiritual goal
+
+    const counter = document.getElementById('counter');
+    const cycleStatus = document.getElementById('cycleStatus');
+    const goalStatus = document.getElementById('goalStatus');
+    const title = document.getElementById('title');
+    const religionSelect = document.getElementById('religionSelect');
+    const incrementBtn = document.getElementById('increment');
+    const resetBtn = document.getElementById('reset');
+
+    const themes = {
+      islamic: {
+        bg: "linear-gradient(145deg, #e8f5e9, #a5d6a7)",
+        title: "🕋 Islamic Tasbih",
+        cycleEmoji: "🟢",
+        goalEmoji: "🕌"
+      },
+      hindu: {
+        bg: "linear-gradient(145deg, #fffde7, #ffe082, #ffd54f)",
+        title: "🕉️ Hindu Mantra Counter",
+        cycleEmoji: "🟠",
+        goalEmoji: "🙏"
+      },
+      buddhist: {
+        bg: "linear-gradient(145deg, #e3f2fd, #90caf9, #64b5f6)",
+        title: "☸️ Buddhist Mala Counter",
+        cycleEmoji: "🔵",
+        goalEmoji: "☸️"
+      }
+    };
+
+    function applyTheme() {
+      const religion = religionSelect.value;
+      document.body.style.background = themes[religion].bg;
+      title.textContent = themes[religion].title;
+    }
+
+    religionSelect.addEventListener('change', () => {
+      applyTheme();
+      resetCounter();
+    });
+
+    incrementBtn.addEventListener('click', () => {
+      count++;
+      counter.style.transform = "scale(1.1)";
+      setTimeout(() => counter.style.transform = "scale(1)", 100);
+
+      if (count > cycleTarget) {
+        count = 1;
+        fullCycles++;
+        cycleStatus.textContent = `${themes[religionSelect.value].cycleEmoji} Full Cycles Completed: ${fullCycles}`;
+
+        if (fullCycles % goalTarget === 0) {
+          spiritualGoals++;
+          goalStatus.textContent = `${themes[religionSelect.value].goalEmoji} Spiritual Goals Achieved: ${spiritualGoals}`;
+          alert(`🎯 Congratulations! You achieved ${spiritualGoals} Spiritual Goal(s)! ${themes[religionSelect.value].goalEmoji}`);
+        }
+      }
+      counter.textContent = count;
+    });
+
+    resetBtn.addEventListener('click', () => {
+      resetCounter();
+    });
+
+    function resetCounter() {
+      count = 0;
+      fullCycles = 0;
+      spiritualGoals = 0;
+      counter.textContent = count;
+      cycleStatus.textContent = `${themes[religionSelect.value].cycleEmoji} Full Cycles Completed: ${fullCycles}`;
+      goalStatus.textContent = '';
+    }
+
+    // Apply initial theme
+    applyTheme();
+  </script>
+</body>
+</html>
+
